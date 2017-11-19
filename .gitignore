@@ -2,3 +2,6 @@ target/
 .idea/
 spark-warehouse/
 *.iml
+.classpath
+.project
+.settings/
