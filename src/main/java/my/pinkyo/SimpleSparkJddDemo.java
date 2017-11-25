@@ -10,6 +10,8 @@ import org.apache.spark.api.java.JavaSparkContext;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class SimpleSparkJddDemo {
@@ -27,16 +29,19 @@ public class SimpleSparkJddDemo {
         
         JavaRDD<String> logData = sc.textFile(logFile).cache();
         
-        JavaPairRDD<String, WordCount> numOfJava;
-        numOfJava = logData.flatMap(line -> Arrays.stream(line.split("\\s"))
-                .map(word -> new WordCount(word, 1L))
-                .collect(Collectors.toList()).iterator())
-                .keyBy(WordCount::getWord)
-                .reduceByKey((wordCount1, wordCount2) ->
-                        new WordCount(wordCount1.getWord(), wordCount1.getCount() + wordCount2.getCount()));
-        System.out.println(numOfJava);
-        System.out.println("line with node, case insensitive: " + numOfJava);
+//        JavaPairRDD<String, Iterable<WordCount>> numOfJava;
+//        numOfJava = (JavaPairRDD<String, Iterable<WordCount>>) logData.flatMap(line -> Arrays.stream(line.split("\\s"))
+//                .map(word -> new WordCount(word, 1L))
+//                .collect(Collectors.toList()).iterator())
+        
+//                .countByValue();
+//        System.out.println(numOfJava);
+//        System.out.println("line with node, case insensitive: " + numOfJava.values());
+//        System.out.println(numOfJava);
+        Map<String, Long> result = logData.flatMap(line -> Arrays.asList(line.split("\\s")).iterator())
+        .countByValue();
 
+        System.out.println(result);
         long stopTime = System.currentTimeMillis();
         System.out.println("==== stop ====, time: " + stopTime);
 
