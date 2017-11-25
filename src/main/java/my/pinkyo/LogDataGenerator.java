@@ -35,7 +35,7 @@ public class LogDataGenerator {
 			
 			String result = sb.toString();
 			
-			for (int i = 0; i < 10; i++) {
+			for (int i = 0; i < 2000000; i++) {
 				targetWriter.println(result);
 			}
 			
